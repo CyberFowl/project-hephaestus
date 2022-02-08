@@ -1,22 +1,25 @@
+import os
 import time
 import pyvda
 import pyautogui as pagui
 
+user = os.getenv("username")
+
 file_dict = {
-    "ae": r"C:\Program Files\Adobe\Adobe After Effects 2021\Support Files\AfterFX.exe",
-    "blender": r"C:\Users\msher\Downloads\blender-2.93.6-windows-x64\blender-2.93.6-windows-x64\blender.exe",
-    "cam": r"C:\Program Files\TechSmith\Camtasia 2019\CamtasiaStudio.exe",
-    "canary": r"C:\Users\msher\Desktop\Desktop\Discord Canary.lnk",
-    "chrome": r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-    "discord": r"C:\Users\msher\Desktop\Desktop\Discord.lnk",
-    "firefox": r"C:\Users\msher\AppData\Local\Mozilla Firefox\firefox.exe",
-    "minecraft": r"C:\Program Files (x86)\Minecraft Launcher\MinecraftLauncher.exe",
-    "psd": r"C:\Program Files\Adobe\Adobe Photoshop CC 2019\Photoshop.exe",
-    "rec": r"C:\Program Files\TechSmith\Camtasia 2019\CamRecorder.exe",
-    "slack": r"C:\Users\msher\AppData\Local\slack\slack.exe",
-    "spotify": r"C:\Program Files (x86)\Google\Chrome\Application\chrome_proxy.exe",
-    "vsc": r"C:\Program Files\Microsoft VS Code\Code.exe",
-    "zoom": r"C:\Users\msher\AppData\Roaming\Zoom\bin\Zoom.exe"
+    "ae": rf"C:\Program Files\Adobe\Adobe After Effects 2021\Support Files\AfterFX.exe",
+    "blender": r"C:\Users\{user}\Downloads\blender-2.93.6-windows-x64\blender-2.93.6-windows-x64\blender.exe",
+    "cam": rf"C:\Program Files\TechSmith\Camtasia 2019\CamtasiaStudio.exe",
+    "canary": rf"C:\Users\{user}\Desktop\Desktop\Discord Canary.lnk",
+    "chrome": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    "discord": rf"C:\Users\{user}\Desktop\Desktop\Discord.lnk",
+    "firefox": rf"C:\Users\{user}\AppData\Local\Mozilla Firefox\firefox.exe",
+    "minecraft": rf"C:\Program Files (x86)\Minecraft Launcher\MinecraftLauncher.exe",
+    "psd": rf"C:\Program Files\Adobe\Adobe Photoshop CC 2019\Photoshop.exe",
+    "rec": rf"C:\Program Files\TechSmith\Camtasia 2019\CamRecorder.exe",
+    "slack": rf"C:\Users\{user}\AppData\Local\slack\slack.exe",
+    "spotify": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome_proxy.exe",
+    "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
+    "zoom": rf"C:\Users\{user}\AppData\Roaming\Zoom\bin\Zoom.exe"
 }
 
 def startapp(app_to_start, time_sleep):
