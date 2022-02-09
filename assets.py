@@ -1,6 +1,7 @@
 import os
 import time
 import pyvda
+import keyboard
 import pyautogui as pagui
 
 user = os.getenv("username")
@@ -13,7 +14,9 @@ file_dict = {
     "chrome": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
     "discord": rf"C:\Users\{user}\Desktop\Desktop\Discord.lnk",
     "firefox": rf"C:\Users\{user}\AppData\Local\Mozilla Firefox\firefox.exe",
+    "key": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\key.py",
     "minecraft": rf"C:\Program Files (x86)\Minecraft Launcher\MinecraftLauncher.exe",
+    "mouse": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\mouse-pointer.py",
     "psd": rf"C:\Program Files\Adobe\Adobe Photoshop CC 2019\Photoshop.exe",
     "rec": rf"C:\Program Files\TechSmith\Camtasia 2019\CamRecorder.exe",
     "slack": rf"C:\Users\{user}\AppData\Local\slack\slack.exe",
@@ -21,6 +24,11 @@ file_dict = {
     "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
     "zoom": rf"C:\Users\{user}\AppData\Roaming\Zoom\bin\Zoom.exe"
 }
+
+def startup():
+    pagui.hotkey("win", "up")
+    pyvda.AppView.current().pin()
+    keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
 
 def startapp(app_to_start, time_sleep):
     pagui.press("win")
@@ -34,6 +42,10 @@ def startapp(app_to_start, time_sleep):
 def move_click(x, y):
     pagui.moveTo(x, y)
     pagui.click()
+
+def keybind():
+    print("keybind")
+    pagui.hotkey("ctrl", "win", "d")
 
 def bootup():
     print("Booting up")
@@ -58,7 +70,7 @@ def bootup_case(box):
 
         startapp("Canary", 17) #Canary
         startapp("WhatsApp", 20) #WhatsApp
-        move_click(295, 180) #Click first chat
+        move_click(182, 218) #Click first chat
         move_click(1741, 1047) #Click chat box
 
         print("Booted up!")
