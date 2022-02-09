@@ -5,10 +5,10 @@ import assets
 import pyglet
 import random
 import shutil
+import test_phase
 import pyautogui as pagui
 
-pagui.hotkey("win", "up")
-pyvda.AppView.current().pin()
+assets.startup()
 
 print(r"""
  888888ba                    oo                     dP      dP     dP                    dP                                    dP                     
@@ -35,7 +35,7 @@ reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["m:", "0", "p:", "pin:", "up:", "unpin:", "b:", "bootup:"]
+    commands = ["0", "m:", "music", "p:", "pin:", "up:", "unpin:", "b:", "bootup:", "t:", "test:"]
     if reply not in commands and not reply.startswith("s: "):
         #Removing Extra Spaces
         while reply[-1] == " ":
@@ -49,6 +49,7 @@ while reply != "0":
             if int(virtual_desk) <= len(pyvda.get_virtual_desktops()):
                 pyvda.VirtualDesktop(int(virtual_desk)).go()
                 time.sleep(3)
+                program = " ".join(program)
                 #Check logged Files
                 if str(program) in assets.file_dict:
                     os.startfile(assets.file_dict[program])
@@ -62,6 +63,7 @@ while reply != "0":
                 pyvda.VirtualDesktop(int(virtual_desk)).go()
                 time.sleep(3)
                 #Check logged Files
+                program = " ".join(program)
                 if str(program) in assets.file_dict:
                     os.startfile(assets.file_dict[program])
                 #Not in Logged Files
@@ -108,7 +110,11 @@ while reply != "0":
         assets.bootup_case(box)
 
 #Music
-    elif reply == "m:":
+    elif reply == "m:" or reply == "music:":
         assets.startapp("Groove", 3)
         assets.move_click(397, 165)
         assets.move_click(935, 549)
+
+#Test space
+    elif reply == "t:" or reply == "test:":
+        test_phase.test()
