@@ -85,7 +85,8 @@ while reply != "0":
         search = reply.split(" ")[1:]
         search = " ".join(search)
 
-        pagui.hotkey("win", "shift", "3")
+        # pagui.hotkey("win", "shift", "3")
+        os.startfile(assets.file_dict["dev"])
         time.sleep(2)
 
         pagui.hotkey("ctrl", "l")
