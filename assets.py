@@ -14,6 +14,7 @@ file_dict = {
     "chrome": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
     "discord": rf"C:\Users\{user}\Desktop\Desktop\Discord.lnk",
     "firefox": rf"C:\Users\{user}\AppData\Local\Mozilla Firefox\firefox.exe",
+    "dev": rf"C:\Program Files\Firefox Developer Edition\firefox.exe",
     "key": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\key.py",
     "minecraft": rf"C:\Program Files (x86)\Minecraft Launcher\MinecraftLauncher.exe",
     "mouse": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\mouse-pointer.py",
@@ -29,6 +30,7 @@ def startup():
     pagui.hotkey("win", "up")
     pyvda.AppView.current().pin()
     keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
+    keyboard.add_abbreviation('lamo', 'lmao')
 
 def startapp(app_to_start, time_sleep):
     pagui.press("win")
