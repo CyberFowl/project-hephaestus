@@ -1,6 +1,7 @@
 import os
 import time
 import pyvda
+import pynput
 import keyboard
 import pyautogui as pagui
 
@@ -25,29 +26,6 @@ file_dict = {
     "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
     "zoom": rf"C:\Users\{user}\AppData\Roaming\Zoom\bin\Zoom.exe"
 }
-
-def startup():
-    pagui.hotkey("win", "up")
-    pyvda.AppView.current().pin()
-    keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
-    keyboard.add_abbreviation('lamo', 'lmao')
-
-def startapp(app_to_start, time_sleep):
-    pagui.press("win")
-    time.sleep(1)
-    pagui.write(app_to_start, interval=0.1)
-    pagui.press("enter")
-    time.sleep(1)
-    pagui.hotkey("win", "up")
-    time.sleep(time_sleep)
-
-def move_click(x, y):
-    pagui.moveTo(x, y)
-    pagui.click()
-
-def keybind():
-    print("keybind")
-    pagui.hotkey("ctrl", "win", "d")
 
 def bootup():
     print("Booting up")
@@ -99,3 +77,35 @@ def bootup_case(box):
     #CANCEL
     elif box == "Cancel":
         print("Bootup canceled")
+
+def move_click(x, y):
+    pagui.moveTo(x, y)
+    pagui.click()
+
+def search():
+    ctrl_l_count = 0
+    def on_release(key):
+        global ctrl_l_count
+        if key == pynput.keyboard.Key.ctrl_l:
+            ctrl_l_count += 1
+            if ctrl_l_count == 3:
+                os.startfile(rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\search.py")
+        else:
+            ctrl_l_count = 0
+    listener = pynput.keyboard.Listener(on_release=on_release)
+    listener.start()
+
+def startapp(app_to_start, time_sleep):
+    pagui.press("win")
+    time.sleep(1)
+    pagui.write(app_to_start, interval=0.1)
+    pagui.press("enter")
+    time.sleep(1)
+    pagui.hotkey("win", "up")
+    time.sleep(time_sleep)
+
+def startup():
+    pagui.hotkey("win", "up")
+    pyvda.AppView.current().pin()
+    keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
+    keyboard.add_abbreviation('lamo', 'lmao')
