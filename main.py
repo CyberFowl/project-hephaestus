@@ -22,21 +22,22 @@ a88aaaa8P' 88d888b. .d8888b. dP .d8888b. .d8888b. d8888P    88aaaaa88a .d8888b. 
 
 box = assets.bootup()
 assets.bootup_case(box)
+assets.search()
 
 print()
 print("""Commands:
-'s: <query>' to search
 'm:' to play music
 'p:' or 'pin:' to pin current window [3 second delay]
-'up:' or 'unpin:' to unpin current window [3 second delay]""")
+'up:' or 'unpin:' to unpin current window [3 second delay]
+Press ctrl thrice to activate search""")
 print()
 
 reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["0", "m:", "music", "p:", "pin:", "up:", "unpin:", "b:", "bootup:", "t:", "test:"]
-    if reply not in commands and not reply.startswith("s: "):
+    commands = ["0", "m:", "music:", "p:", "pin:", "up:", "unpin:", "b:", "bootup:", "t:", "test:"]
+    if reply not in commands:
         #Removing Extra Spaces
         while reply[-1] == " ":
             reply = reply[0:-1]
@@ -79,19 +80,6 @@ while reply != "0":
             #Not in Logged Files
             else:
                 assets.startapp(program, 0.1)
-
-#Search
-    elif reply.startswith("s: "):
-        search = reply.split(" ")[1:]
-        search = " ".join(search)
-
-        # pagui.hotkey("win", "shift", "3")
-        os.startfile(assets.file_dict["dev"])
-        time.sleep(2)
-
-        pagui.hotkey("ctrl", "l")
-        pagui.write(search, interval=0.001)
-        pagui.press("enter")
 
 #Pin Window
     elif reply == "p:" or reply == "pin:":
