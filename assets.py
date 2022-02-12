@@ -82,16 +82,37 @@ def move_click(x, y):
     pagui.moveTo(x, y)
     pagui.click()
 
-def search():
+def keybind():
     ctrl_l_count = 0
+    esc_count = 0
+    shift_l_count = 0
     def on_release(key):
-        global ctrl_l_count
+        #Search
+        global ctrl_l_count, esc_count, shift_l_count
         if key == pynput.keyboard.Key.ctrl_l:
             ctrl_l_count += 1
             if ctrl_l_count == 3:
                 os.startfile(rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\search.py")
         else:
             ctrl_l_count = 0
+        #Escape
+        if key == pynput.keyboard.Key.esc:
+            esc_count += 1
+            if esc_count == 3:
+                pyvda.AppView.current().unpin()
+                pagui.hotkey("ctrl","win","d")
+        else:
+            esc_count = 0
+        #Pin/Unpin
+        if key == pynput.keyboard.Key.shift_l:
+            shift_l_count += 1
+            if shift_l_count == 3:
+                if pyvda.AppView.current().is_pinned():
+                    pyvda.AppView.current().unpin()
+                else:
+                    pyvda.AppView.current().pin()
+        else:
+            shift_l_count = 0
     listener = pynput.keyboard.Listener(on_release=on_release)
     listener.start()
 
