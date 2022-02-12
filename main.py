@@ -22,7 +22,7 @@ a88aaaa8P' 88d888b. .d8888b. dP .d8888b. .d8888b. d8888P    88aaaaa88a .d8888b. 
 
 box = assets.bootup()
 assets.bootup_case(box)
-assets.search()
+assets.keybind()
 
 print()
 print("""Commands:
@@ -36,7 +36,7 @@ reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["0", "m:", "music:", "p:", "pin:", "up:", "unpin:", "b:", "bootup:", "t:", "test:"]
+    commands = ["0", "m:", "music:", "b:", "bootup:", "t:", "test:"]
     if reply not in commands:
         #Removing Extra Spaces
         while reply[-1] == " ":
@@ -80,18 +80,6 @@ while reply != "0":
             #Not in Logged Files
             else:
                 assets.startapp(program, 0.1)
-
-#Pin Window
-    elif reply == "p:" or reply == "pin:":
-        time.sleep(3)
-        pyvda.AppView.current().pin()
-        print("Pinned")
-
-#Unpin Window
-    elif reply == "up:" or reply == "unpin:":
-        time.sleep(3)
-        pyvda.AppView.current().unpin()
-        print("Unpinned")
 
 #Bootup
     elif reply == "b:" or reply == "bootup:":
