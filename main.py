@@ -27,8 +27,9 @@ assets.keybind()
 print()
 print("""Commands:
 'm:' to play music
-'p:' or 'pin:' to pin current window [3 second delay]
-'up:' or 'unpin:' to unpin current window [3 second delay]
+'xy:' to get current xy coordinates of mouse
+'xyc:' to get continuous xy coordinates of mouse
+Press shift thrice to pin/unpin current window
 Press ctrl thrice to activate search""")
 print()
 
@@ -36,7 +37,7 @@ reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["0", "m:", "music:", "b:", "bootup:", "t:", "test:"]
+    commands = ["0", "m:", "xy:", "xyc:", "b:", "t:"]
     if reply not in commands:
         #Removing Extra Spaces
         while reply[-1] == " ":
@@ -82,16 +83,25 @@ while reply != "0":
                 assets.startapp(program, 0.1)
 
 #Bootup
-    elif reply == "b:" or reply == "bootup:":
+    elif reply == "b:":
         box = assets.bootup()
         assets.bootup_case(box)
 
+#Current coords
+    elif reply == "xy:":
+        x, y = pagui.position()
+        print(f"X:{str(x).rjust(4)} Y:{str(y).rjust(4)}")
+
+#Mouse Pointer
+    elif reply == "xyc:":
+        os.startfile(assets.file_dict["mouse"])
+
 #Music
-    elif reply == "m:" or reply == "music:":
+    elif reply == "m:":
         assets.startapp("Groove", 3)
-        assets.move_click(397, 165)
-        assets.move_click(935, 549)
+        pagui.click(397, 165)
+        pagui.click(935, 549)
 
 #Test space
-    elif reply == "t:" or reply == "test:":
+    elif reply == "t:":
         test_phase.test()
