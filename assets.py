@@ -28,11 +28,17 @@ file_dict = {
 }
 
 def bootup():
+    """
+    Opens a dialog box asking for bootup sequence
+    """
     print("Booting up")
     result = pagui.confirm(text="Please select bootup mode", title="Bootup Mode", buttons=["Default", "Python", "Class", "Cancel"])
     return result
     
 def bootup_case(box):
+    """
+    Runs a bootup sequence based on `bootup()`
+    """
     if box == "Default":
     #Virtual Desktop 1
         startapp("Firefox", 14) #Firefox
@@ -50,18 +56,18 @@ def bootup_case(box):
 
         startapp("Canary", 17) #Canary
         startapp("WhatsApp", 20) #WhatsApp
-        move_click(182, 218) #Click first chat
-        move_click(1741, 1047) #Click chat box
+        pagui.click(182, 218) #Click first chat
+        pagui.click(1741, 1047) #Click chat box
 
         print("Booted up!")
 
     #CLASS
     elif box == "Class":
         startapp("Chrome", 10) #Chrome
-        move_click(700, 570) #Click first profile
+        pagui.click(700, 570) #Click first profile
         startapp("WhatsApp", 20) #WhatsApp
-        move_click(182, 218) #Click first chat
-        move_click(1741, 1047) #Click chat box
+        pagui.click(182, 218) #Click first chat
+        pagui.click(1741, 1047) #Click chat box
 
         print("Booted up!")
 
@@ -78,11 +84,10 @@ def bootup_case(box):
     elif box == "Cancel":
         print("Bootup canceled")
 
-def move_click(x, y):
-    pagui.moveTo(x, y)
-    pagui.click()
-
 def keybind():
+    """
+    Waits for key combinations to run code
+    """
     ctrl_l_count = 0
     esc_count = 0
     shift_l_count = 0
@@ -117,6 +122,9 @@ def keybind():
     listener.start()
 
 def startapp(app_to_start, time_sleep):
+    """
+    Starts an app from start search bar with an interval of `x` seconds
+    """
     pagui.press("win")
     time.sleep(1)
     pagui.write(app_to_start, interval=0.1)
@@ -126,6 +134,9 @@ def startapp(app_to_start, time_sleep):
     time.sleep(time_sleep)
 
 def startup():
+    """
+    Runs on startup of Project Hephaestus
+    """
     pagui.hotkey("win", "up")
     pyvda.AppView.current().pin()
     keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
