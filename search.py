@@ -3,8 +3,6 @@ import time
 import assets
 import pyautogui as pagui
 
-pagui.hotkey("win", "up")
-
 print("Query: ", end="")
 reply = input().lower()
 search = reply.split(" ")[0:]
