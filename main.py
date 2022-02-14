@@ -57,7 +57,7 @@ while reply != "0":
                     os.startfile(assets.file_dict[program])
                 #Not in Logged Files
                 else:
-                    assets.startapp(" ".join(program), 0.1)
+                    assets.startapp(program, 0.1)
             #Virtual Desktop unavailable
             else:
                 for i in range(0, int(virtual_desk) - len(pyvda.get_virtual_desktops())):
@@ -70,7 +70,7 @@ while reply != "0":
                     os.startfile(assets.file_dict[program])
                 #Not in Logged Files
                 else:
-                    assets.startapp(" ".join(program), 0.1)
+                    assets.startapp(program, 0.1)
 
         #No Virtual Desktop Specified
         except ValueError:
