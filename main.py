@@ -1,4 +1,5 @@
 import os
+from re import search
 import time
 import pyvda
 import assets
@@ -24,6 +25,8 @@ box = assets.bootup()
 assets.bootup_case(box)
 assets.keybind()
 
+user = os.getenv("username")
+
 print()
 print("""Commands:
 'm:' to play music
@@ -37,7 +40,7 @@ reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["0", "m:", "xy:", "xyc:", "b:", "t:"]
+    commands = ["0", "m:", "xy:", "xyc:", "b:", "t:", "hex:"]
     if reply not in commands:
         #Removing Extra Spaces
         while reply[-1] == " ":
@@ -86,6 +89,17 @@ while reply != "0":
     elif reply == "b:":
         box = assets.bootup()
         assets.bootup_case(box)
+
+#Random color
+    elif reply == "hex:":
+        rndm_hex = str(random.randrange(0, 16777215))
+        rndm_hex = rndm_hex[2:]
+        print(f"#{rndm_hex}")
+        time.sleep(1)
+        os.startfile(rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\search.py")
+        time.sleep(1)
+        pagui.write(f"#{rndm_hex}")
+        pagui.press("enter")
 
 #Current coords
     elif reply == "xy:":
