@@ -3,9 +3,11 @@ import time
 import pyvda
 import pynput
 import keyboard
+import win32gui
 import pyautogui as pagui
 
 user = os.getenv("username")
+window_handle = win32gui.GetForegroundWindow()
 
 file_dict = {
     "ae": rf"C:\Program Files\Adobe\Adobe After Effects 2021\Support Files\AfterFX.exe",
@@ -91,9 +93,10 @@ def keybind():
     ctrl_l_count = 0
     esc_count = 0
     shift_l_count = 0
+    alt_l_count = 0
     def on_release(key):
         #Search
-        global ctrl_l_count, esc_count, shift_l_count
+        global ctrl_l_count, esc_count, shift_l_count, alt_l_count
         if key == pynput.keyboard.Key.ctrl_l:
             ctrl_l_count += 1
             if ctrl_l_count == 3:
@@ -118,6 +121,13 @@ def keybind():
                     pyvda.AppView.current().pin()
         else:
             shift_l_count = 0
+        #Open file/app
+        if key == pynput.keyboard.Key.alt_l:
+            alt_l_count += 1
+            if alt_l_count == 3:
+                win32gui.SetForegroundWindow(window_handle)
+        else:
+            alt_l_count = 0
     listener = pynput.keyboard.Listener(on_release=on_release)
     listener.start()
 
