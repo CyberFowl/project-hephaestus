@@ -126,6 +126,7 @@ def keybind():
             alt_l_count += 1
             if alt_l_count == 3:
                 win32gui.SetForegroundWindow(window_handle)
+                pyvda.AppView.current().pin()
         else:
             alt_l_count = 0
     listener = pynput.keyboard.Listener(on_release=on_release)
@@ -151,3 +152,5 @@ def startup():
     pyvda.AppView.current().pin()
     keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
     keyboard.add_abbreviation('lamo', 'lmao')
+    keyboard.add_abbreviation('burh', 'bruh')
+    keyboard.add_abbreviation(':susy:', 'https://cdn.discordapp.com/emojis/888846354527428638.webp?size=32&quality=lossless')
