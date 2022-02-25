@@ -2,8 +2,10 @@ import os
 import time
 import pyvda
 import pynput
+import random
 import keyboard
 import win32gui
+import pypresence
 import pyautogui as pagui
 
 user = os.getenv("username")
@@ -132,6 +134,47 @@ def keybind():
     listener = pynput.keyboard.Listener(on_release=on_release)
     listener.start()
 
+def choose_presence():
+    result = pagui.confirm(text="Please select bootup mode", title="Bootup Mode", buttons=["Python", "Work", "Cancel"])
+    return result
+
+def presence(choice):
+    """
+    Displays a rich presence on your Discord appliation
+    """
+
+    if choice == "Python":
+        presence = pypresence.Presence("848214359822041218")
+        presence.connect()
+        print("Connected")
+        presence.update(
+        details="on vs code",
+        large_image="python",
+        small_image="vsc",
+        large_text="Project Hephaestus",
+        small_text="Visual Studio Code",
+        buttons=[
+                {"label": "GitHub",
+                "url": "https://github.com/CyberFowl/"},
+                {"label": "Current Project",
+                "url": "https://github.com/CyberFowl/project-hephaestus/"}
+                ]
+        )
+    
+    elif choice == "Work":
+        presence = pypresence.Presence("946448728884138014")
+        presence.connect()
+        print("Connected")
+        work = input("Working on: ")
+        presence.update(
+        details=f"on {work}",
+        start=time.time(),
+        large_image="dnd",
+        large_text="DND"
+        )
+
+    print("Updated")
+
 def startapp(app_to_start, time_sleep):
     """
     Starts an app from start search bar with an interval of `x` seconds
@@ -153,4 +196,5 @@ def startup():
     keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
     keyboard.add_abbreviation('lamo', 'lmao')
     keyboard.add_abbreviation('burh', 'bruh')
+    keyboard.add_abbreviation('SOP', 'System.out.println();')
     keyboard.add_abbreviation(':susy:', 'https://cdn.discordapp.com/emojis/888846354527428638.webp?size=32&quality=lossless')
