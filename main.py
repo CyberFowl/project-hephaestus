@@ -6,6 +6,7 @@ import pyglet
 import random
 import shutil
 import test_phase
+import pypresence
 import pyautogui as pagui
 
 assets.startup()
@@ -29,6 +30,7 @@ print("""Commands:
 'm:' to play music
 'xy:' to get current xy coordinates of mouse
 'xyc:' to get continuous xy coordinates of mouse
+'presence:' to activate discord presence
 Press shift thrice to pin/unpin current window
 Press ctrl thrice to activate search""")
 print()
@@ -37,7 +39,7 @@ reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["0", "m:", "xy:", "xyc:", "b:", "t:", "hex:"]
+    commands = ["0", "m:", "xy:", "xyc:", "b:", "t:", "hex:", "presence:"]
     if reply not in commands:
         #Removing Extra Spaces
         while reply[-1] == " ":
@@ -99,6 +101,11 @@ while reply != "0":
         time.sleep(1)
         pagui.write(f"#{rndm_hex}")
         pagui.press("enter")
+
+#Presence
+    elif reply == "presence:":
+        choice = assets.choose_presence()
+        assets.presence(choice)
 
 #Current coords
     elif reply == "xy:":
