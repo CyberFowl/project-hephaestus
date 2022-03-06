@@ -146,19 +146,19 @@ Press ctrl thrice to activate web search
         choice = assets.choose_presence()
         assets.presence(choice)
 
-#Shutdown
+#Shutdown/Sleep
     elif reply == "shutdown:":
-        shutdown = input("Do you wish to shutdown your computer ? (y/n): ")
-        if shutdown == "n":
-            print("Shutdown sequence cancelled")
+        box = pagui.confirm(text="Select shutdown mode", title="Shutdown Mode", buttons=["Shutdown", "Sleep"])
+        if box == "Shutdown":
+            shutdown = input("Do you wish to shutdown your computer ? (y/n): ")
+            if shutdown == "n":
+                print("Shutdown sequence cancelled")
+            else:
+                print("Shutting down now...")
+                time.sleep(1)
+                os.system("shutdown /s /t 5")
         else:
-            print("Shutting down now...")
-            time.sleep(1)
-            os.system("shutdown /s /t 5")
-
-#Sleep
-    elif reply == "sleep:":
-        os.startfile(assets.file_dict["sleep"])
+            os.startfile(assets.file_dict["sleep"])
 
 #Test space
     elif reply == "test:":
