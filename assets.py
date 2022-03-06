@@ -2,7 +2,6 @@ import os
 import time
 import pyvda
 import pynput
-import random
 import keyboard
 import win32gui
 import pypresence
@@ -17,6 +16,7 @@ file_dict = {
     "cam": rf"C:\Program Files\TechSmith\Camtasia 2019\CamtasiaStudio.exe",
     "canary": rf"C:\Users\{user}\Desktop\Desktop\Discord Canary.lnk",
     "chrome": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    "desktop_search": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\desktop_search.py",
     "discord": rf"C:\Users\{user}\Desktop\Desktop\Discord.lnk",
     "firefox": rf"C:\Users\{user}\AppData\Local\Mozilla Firefox\firefox.exe",
     "dev": rf"C:\Program Files\Firefox Developer Edition\firefox.exe",
@@ -26,8 +26,11 @@ file_dict = {
     "psd": rf"C:\Program Files\Adobe\Adobe Photoshop CC 2019\Photoshop.exe",
     "rec": rf"C:\Program Files\TechSmith\Camtasia 2019\CamRecorder.exe",
     "slack": rf"C:\Users\{user}\AppData\Local\slack\slack.exe",
+    "sleep": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\sleep.py",
     "spotify": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome_proxy.exe",
+    "test": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\test_phase.py",
     "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
+    "web_search": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\web_search.py",
     "zoom": rf"C:\Users\{user}\AppData\Roaming\Zoom\bin\Zoom.exe"
 }
 
@@ -88,6 +91,17 @@ def bootup_case(box):
     elif box == "Cancel":
         print("Bootup canceled")
 
+def domain_check(reply):
+    domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", "in", ".inc", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", "uk", "us", ".wiki", ".xyz"]
+    for domain in domains:
+        if domain in reply:
+            state = True
+            break
+        else:
+            state = False
+
+    return state
+
 def keybind():
     """
     Waits for key combinations to run code
@@ -97,12 +111,12 @@ def keybind():
     shift_l_count = 0
     alt_l_count = 0
     def on_release(key):
-        #Search
+        #Web Search
         global ctrl_l_count, esc_count, shift_l_count, alt_l_count
         if key == pynput.keyboard.Key.ctrl_l:
             ctrl_l_count += 1
             if ctrl_l_count == 3:
-                os.startfile(rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\search.py")
+                os.startfile(rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\web_search.py")
         else:
             ctrl_l_count = 0
         #Escape
@@ -123,14 +137,14 @@ def keybind():
                     pyvda.AppView.current().pin()
         else:
             shift_l_count = 0
-        #Open file/app
-        if key == pynput.keyboard.Key.alt_l:
-            alt_l_count += 1
-            if alt_l_count == 3:
-                win32gui.SetForegroundWindow(window_handle)
-                pyvda.AppView.current().pin()
-        else:
-            alt_l_count = 0
+        # #Open file/app
+        # if key == pynput.keyboard.Key.alt_l:
+        #     alt_l_count += 1
+        #     if alt_l_count == 3:
+        #         win32gui.SetForegroundWindow(window_handle)
+        #         pyvda.AppView.current().pin()
+        # else:
+        #     alt_l_count = 0
     listener = pynput.keyboard.Listener(on_release=on_release)
     listener.start()
 
