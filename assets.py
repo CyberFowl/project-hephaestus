@@ -20,7 +20,6 @@ file_dict = {
     "discord": rf"C:\Users\{user}\Desktop\Desktop\Discord.lnk",
     "firefox": rf"C:\Users\{user}\AppData\Local\Mozilla Firefox\firefox.exe",
     "dev": rf"C:\Program Files\Firefox Developer Edition\firefox.exe",
-    "key": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\key.py",
     "minecraft": rf"C:\Program Files (x86)\Minecraft Launcher\MinecraftLauncher.exe",
     "mouse": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\mouse-pointer.py",
     "psd": rf"C:\Program Files\Adobe\Adobe Photoshop CC 2019\Photoshop.exe",
@@ -92,6 +91,9 @@ def bootup_case(box):
         print("Bootup canceled")
 
 def domain_check(reply):
+    """
+    Checks text for top-level domains
+    """
     domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", ".in", ".inc", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", ".uk", ".us", ".wiki", ".xyz"]
     for domain in domains:
         if domain in reply:
@@ -149,6 +151,9 @@ def keybind():
     listener.start()
 
 def choose_presence():
+    """
+    Displays rich presence for discord
+    """
     result = pagui.confirm(text="Please select bootup mode", title="Bootup Mode", buttons=["Python", "Work", "Cancel"])
     return result
 
