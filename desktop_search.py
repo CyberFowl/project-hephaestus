@@ -1,12 +1,15 @@
 import os
 import glob
 import time
+import pyautogui as pagui
 
-print("Hephaestus Desktop Search\nType 'f:' to search for files and 'd:' to search for directories")
-query = input()
+query = input("Hephaestus Desktop Search\nType 'f:' to search for files and 'd:' to search for directories\nQuery: ")
 mode = query.split(" ")[0]
+
+box = pagui.confirm(text="Select where you'd like to search", title="Search Location", buttons=["Desktop", "Downloads", "Documents", "Music"])
+
 if mode != "f:" and mode != "d:":
-    for name in glob.glob(r"C:\Users\msher\Desktop\**\*", recursive = True):
+    for name in glob.glob(rf"C:\Users\msher\{box}\**\*", recursive = True):
         fd = name.split("\\")[-1]
         if query in fd:
             print(name)
@@ -16,7 +19,7 @@ if mode != "f:" and mode != "d:":
 elif mode == "f:":
     query = query.split(" ")[1:]
     query = " ".join(query)
-    for name in glob.glob(r"C:\Users\msher\Desktop\**\*", recursive = True):
+    for name in glob.glob(rf"C:\Users\msher\{box}\**\*", recursive = True):
         fd = name.split("\\")[-1]
         if query in fd and os.path.isfile(name):
             print(name)
@@ -26,7 +29,7 @@ elif mode == "f:":
 elif mode == "d:":
     query = query.split(" ")[1:]
     query = " ".join(query)
-    for name in glob.glob(r"C:\Users\msher\Desktop\**\*", recursive = True):
+    for name in glob.glob(rf"C:\Users\msher\{box}\**\*", recursive = True):
         fd = name.split("\\")[-1]
         if query in fd and os.path.isdir(name):
             print(name)
