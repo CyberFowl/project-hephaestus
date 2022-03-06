@@ -30,7 +30,6 @@ reply = ""
 while reply != "0":
     reply = input().lower()
     commands = ["help:", "0", "boot:", "dsearch:", "hex:", "music:", "new:", "presence:", "shutdown:", "sleep:", "test:", "xy:", "xycoords:"]
-    print(assets.domain_check(reply))
     if reply not in commands and not assets.domain_check(reply):
         #Removing Extra Spaces
         while reply[-1] == " ":
