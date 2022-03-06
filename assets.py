@@ -92,7 +92,7 @@ def bootup_case(box):
         print("Bootup canceled")
 
 def domain_check(reply):
-    domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", "in", ".inc", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", "uk", "us", ".wiki", ".xyz"]
+    domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", ".in", ".inc", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", ".uk", ".us", ".wiki", ".xyz"]
     for domain in domains:
         if domain in reply:
             state = True
