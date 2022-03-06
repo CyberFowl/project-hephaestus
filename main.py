@@ -2,11 +2,7 @@ import os
 import time
 import pyvda
 import assets
-import pyglet
 import random
-import shutil
-import test_phase
-import pypresence
 import pyautogui as pagui
 
 assets.startup()
@@ -26,21 +22,16 @@ assets.bootup_case(box)
 assets.keybind()
 
 print()
-print("""Commands:
-'m:' to play music
-'xy:' to get current xy coordinates of mouse
-'xyc:' to get continuous xy coordinates of mouse
-'presence:' to activate discord presence
-Press shift thrice to pin/unpin current window
-Press ctrl thrice to activate search""")
+print("'help:' to access help menu")
 print()
 
 reply = ""
 
 while reply != "0":
     reply = input().lower()
-    commands = ["0", "m:", "xy:", "xyc:", "b:", "t:", "hex:", "presence:"]
-    if reply not in commands:
+    commands = ["help:", "0", "boot:", "dsearch:", "hex:", "music:", "new:", "presence:", "shutdown:", "sleep:", "test:", "xy:", "xycoords:"]
+    print(assets.domain_check(reply))
+    if reply not in commands and not assets.domain_check(reply):
         #Removing Extra Spaces
         while reply[-1] == " ":
             reply = reply[0:-1]
@@ -84,10 +75,46 @@ while reply != "0":
             else:
                 assets.startapp(program, 0.1)
 
+#Help
+    elif reply == "help:":
+        print("""Help Menu:
+Features:
+Type in any program to open it <[program name] (virtual desktop)>
+Type urls to web search <example.[com/net/us]>
+
+Commands:
+'boot:' to enter bootup modes
+'dsearch:' to enter desktop search
+'hex:' to get random hex color
+'music:' to play music
+'new:' to create a new file
+'presence:' to activate discord presence
+'shutdown:' to shutdown
+'sleep:' to sleep
+'xy:' to get current xy coordinates of mouse
+'xycoords:' to get continuous xy coordinates of mouse
+
+Keybinds:
+Press esc thrice to enter new virtual desktop
+Press shift thrice to pin/unpin current window
+Press ctrl thrice to activate web search
+""")
+
+#Website
+    elif assets.domain_check(reply):
+        os.startfile(assets.file_dict["web_search"])
+        time.sleep(2)
+        pagui.write(reply, interval=0.001)
+        pagui.press("enter")
+
 #Bootup
-    elif reply == "b:":
+    elif reply == "boot:":
         box = assets.bootup()
         assets.bootup_case(box)
+
+#Desktop Search
+    elif reply == "dsearch:":
+        os.startfile(assets.file_dict["desktop_search"])
 
 #Random color
     elif reply == "hex:":
@@ -97,15 +124,46 @@ while reply != "0":
             rndm_hex = str(rndm_hex) + "0"* (6 - len(rndm_hex))
         print(f"#{rndm_hex}")
         time.sleep(1)
-        os.startfile(rf"C:\Users\msher\Desktop\Desktop\project-hephaestus\search.py")
+        os.startfile(assets.file_dict["web_search"])
         time.sleep(1)
         pagui.write(f"#{rndm_hex}")
         pagui.press("enter")
+
+#Music
+    elif reply == "music:":
+        assets.startapp("Groove", 3)
+        pagui.click(397, 165)
+        pagui.click(935, 549)
+
+#Create file
+    elif reply == "new:":
+        file_name = input("File name: ")
+        open(rf"C:\Users\msher\Downloads\{file_name}", "x")
+        os.startfile(rf"C:\Users\msher\Downloads\{file_name}")
+
 
 #Presence
     elif reply == "presence:":
         choice = assets.choose_presence()
         assets.presence(choice)
+
+#Shutdown
+    elif reply == "shutdown:":
+        shutdown = input("Do you wish to shutdown your computer ? (y/n): ")
+        if shutdown == "n":
+            print("Shutdown sequence cancelled")
+        else:
+            print("Shutting down now...")
+            time.sleep(1)
+            os.system("shutdown /s /t 5")
+
+#Sleep
+    elif reply == "sleep:":
+        os.startfile(assets.file_dict["sleep"])
+
+#Test space
+    elif reply == "test:":
+        os.startfile(assets.file_dict["test"])
 
 #Current coords
     elif reply == "xy:":
@@ -113,15 +171,5 @@ while reply != "0":
         print(f"X:{str(x).rjust(4)} Y:{str(y).rjust(4)}")
 
 #Mouse Pointer
-    elif reply == "xyc:":
+    elif reply == "xycoords:":
         os.startfile(assets.file_dict["mouse"])
-
-#Music
-    elif reply == "m:":
-        assets.startapp("Groove", 3)
-        pagui.click(397, 165)
-        pagui.click(935, 549)
-
-#Test space
-    elif reply == "t:":
-        test_phase.test()
