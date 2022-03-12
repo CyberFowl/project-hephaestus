@@ -1,6 +1,8 @@
+import os
 import time
 import pyautogui as pagui
 
+os.system("color 4")
 pagui.hotkey("win", "up")
 while True:
     pagui.click()
