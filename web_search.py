@@ -3,6 +3,8 @@ import time
 import assets
 import pyautogui as pagui
 
+os.system("color 4")
+
 print("Hephaestus Web Search\nType 'p:' to enter private mode and 'v:' to search verbatim")
 print("Query: ", end="")
 reply = input().lower()
