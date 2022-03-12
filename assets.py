@@ -1,4 +1,5 @@
 import os
+import rich
 import time
 import pyvda
 import pynput
@@ -27,6 +28,7 @@ file_dict = {
     "slack": rf"C:\Users\{user}\AppData\Local\slack\slack.exe",
     "sleep": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\sleep.py",
     "spotify": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome_proxy.exe",
+    "startup": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\startup.py",
     "test": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\test_phase.py",
     "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
     "web_search": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\web_search.py",
@@ -94,7 +96,7 @@ def domain_check(reply):
     """
     Checks text for top-level domains
     """
-    domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", ".in", ".inc", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", ".uk", ".us", ".wiki", ".xyz"]
+    domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", ".in", ".inc", ".io", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", ".uk", ".us", ".wiki", ".xyz"]
     for domain in domains:
         if domain in reply:
             state = True
@@ -212,6 +214,7 @@ def startup():
     """
     pagui.hotkey("win", "up")
     pyvda.AppView.current().pin()
+    os.system("color 4")
     keyboard.add_abbreviation('shrug', '¯\_(ツ)_/¯')
     keyboard.add_abbreviation('lamo', 'lmao')
     keyboard.add_abbreviation('burh', 'bruh')
