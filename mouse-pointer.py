@@ -1,4 +1,6 @@
+import os
 import pyautogui
+os.system("color 4")
 print('Press Ctrl-C to quit.')
 try:
     while True:
