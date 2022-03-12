@@ -3,7 +3,10 @@ import time
 import pyvda
 import assets
 import random
+import rich
+import rich.console
 import pyautogui as pagui
+from tkinter import *
 
 assets.startup()
 
@@ -21,16 +24,14 @@ box = assets.bootup()
 assets.bootup_case(box)
 assets.keybind()
 
-print()
-print("'help:' to access help menu")
-print()
+rich.print("[#007fff]\n'/help' to access help menu[/]", end="\n\n")
 
+console = rich.console.Console()
+user = os.getenv("username")
 reply = ""
-
 while reply != "0":
     reply = input().lower()
-    commands = ["help:", "0", "boot:", "dsearch:", "hex:", "music:", "new:", "presence:", "shutdown:", "sleep:", "test:", "xy:", "xycoords:"]
-    if reply not in commands and not assets.domain_check(reply):
+    if not reply.startswith("/") and not assets.domain_check(reply) and not reply == "0":
         #Removing Extra Spaces
         while reply[-1] == " ":
             reply = reply[0:-1]
@@ -75,28 +76,30 @@ while reply != "0":
                 assets.startapp(program, 0.1)
 
 #Help
-    elif reply == "help:":
-        print("""Help Menu:
+    elif reply.startswith("/help"):
+        rich.print("""
+[#007fff]Help Menu:
 Features:
-Type in any program to open it <[program name] (virtual desktop)>
-Type urls to web search <example.[com/net/us]>
+Type in any program to open it <(program name) (virtual desktop)>
+Type urls to web search <example.(com/net/us)>
 
 Commands:
-'boot:' to enter bootup modes
-'dsearch:' to enter desktop search
-'hex:' to get random hex color
-'music:' to play music
-'new:' to create a new file
-'presence:' to activate discord presence
-'shutdown:' to shutdown
-'sleep:' to sleep
-'xy:' to get current xy coordinates of mouse
-'xycoords:' to get continuous xy coordinates of mouse
+'/boot' to enter bootup modes
+'/dsearch' to enter desktop search
+'/hex' to get random hex color
+'/music' to play music
+'/new' to create a new file
+'/presence' to activate discord presence
+'/reload' to reload project hephaestus
+'/shutdown' to shutdown
+'/sleep' to sleep
+'/xy' to get current xy coordinates of mouse
+'/xycoords' to get continuous xy coordinates of mouse
 
 Keybinds:
 Press esc thrice to enter new virtual desktop
 Press shift thrice to pin/unpin current window
-Press ctrl thrice to activate web search
+Press ctrl thrice to activate web search[/]
 """)
 
 #Website
@@ -107,68 +110,82 @@ Press ctrl thrice to activate web search
         pagui.press("enter")
 
 #Bootup
-    elif reply == "boot:":
+    elif reply.startswith("/boot"):
         box = assets.bootup()
         assets.bootup_case(box)
 
 #Desktop Search
-    elif reply == "dsearch:":
+    elif reply.startswith("/dsearch"):
         os.startfile(assets.file_dict["desktop_search"])
 
-#Random color
-    elif reply == "hex:":
-        rndm_hex = str(random.randrange(0, 16777215))
-        rndm_hex = rndm_hex[2:]
+#Hex color
+    elif reply.startswith("/hex"):
+        rndm_hex = str(random.randrange(0, 16777215))[2:]
         if len(rndm_hex) != 6:
             rndm_hex = str(rndm_hex) + "0"* (6 - len(rndm_hex))
-        print(f"#{rndm_hex}")
-        time.sleep(1)
-        os.startfile(assets.file_dict["web_search"])
-        time.sleep(1)
-        pagui.write(f"#{rndm_hex}")
-        pagui.press("enter")
+        rich.print(f"[#{rndm_hex}]#{rndm_hex}[/]")
 
 #Music
-    elif reply == "music:":
+    elif reply.startswith("/music"):
         assets.startapp("Groove", 3)
         pagui.click(397, 165)
         pagui.click(935, 549)
 
 #Create file
-    elif reply == "new:":
-        file_name = input("File name: ")
-        open(rf"C:\Users\msher\Downloads\{file_name}", "x")
-        os.startfile(rf"C:\Users\msher\Downloads\{file_name}")
+    elif reply.startswith("/new"):
+        file_name = reply[5:]
+        open(rf"C:\Users\{user}\Downloads\{file_name}", "x")
+        os.startfile(rf"C:\Users\{user}\Downloads\{file_name}")
 
 
 #Presence
-    elif reply == "presence:":
+    elif reply.startswith("/presence"):
         choice = assets.choose_presence()
         assets.presence(choice)
 
+#Reload
+    elif reply.startswith("/reload"):
+        os.startfile(assets.file_dict["startup"])
+        time.sleep(1)
+        pagui.press("enter")
+        time.sleep(1)
+        pagui.press("left")
+        pagui.press("enter")
+        time.sleep(1)
+        pagui.hotkey("alt", "tab")
+        pagui.hotkey("alt", "f4")
+
 #Shutdown/Sleep
-    elif reply == "shutdown:":
+    elif reply.startswith("/shutdown"):
+        try:
+            waittime = int(reply[10:])
+        except ValueError:
+            pass
         box = pagui.confirm(text="Select shutdown mode", title="Shutdown Mode", buttons=["Shutdown", "Sleep"])
         if box == "Shutdown":
-            shutdown = input("Do you wish to shutdown your computer ? (y/n): ")
+            shutdown = console.input("[#007fff]Do you wish to shutdown your computer ? (y/n): [/]")
             if shutdown == "n":
-                print("Shutdown sequence cancelled")
+                rich.print("[#c50f1f]Shutdown sequence cancelled[/]")
             else:
-                print("Shutting down now...")
-                time.sleep(1)
+                rich.print(f"[#c50f1f]Shutting down in {waittime} seconds...[/]")
+                time.sleep(waittime)
+                print("[#00ff00]Shutting down now...[/]")
+                time.sleep(2)
                 os.system("shutdown /s /t 5")
         else:
+            print("Entered sleep mode")
+            time.sleep(waittime)
             os.startfile(assets.file_dict["sleep"])
 
 #Test space
-    elif reply == "test:":
+    elif reply.startswith("/test"):
         os.startfile(assets.file_dict["test"])
 
 #Current coords
-    elif reply == "xy:":
+    elif reply.startswith("/xy"):
         x, y = pagui.position()
         print(f"X:{str(x).rjust(4)} Y:{str(y).rjust(4)}")
 
 #Mouse Pointer
-    elif reply == "xycoords:":
+    elif reply.startswith("/xycoords"):
         os.startfile(assets.file_dict["mouse"])
