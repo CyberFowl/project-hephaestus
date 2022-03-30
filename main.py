@@ -1,16 +1,15 @@
 import os
+import glob
 import time
 import pyvda
 import assets
 import random
 import rich
-import rich.console
 import pyautogui as pagui
-from tkinter import *
 
 assets.startup()
 
-print(r"""
+rich.print(r"""[#5c0dde]
  888888ba                    oo                     dP      dP     dP                    dP                                    dP                     
  88    `8b                                          88      88     88                    88                                    88                     
 a88aaaa8P' 88d888b. .d8888b. dP .d8888b. .d8888b. d8888P    88aaaaa88a .d8888b. 88d888b. 88d888b. .d8888b. .d8888b. .d8888b. d8888P dP    dP .d8888b. 
@@ -18,7 +17,7 @@ a88aaaa8P' 88d888b. .d8888b. dP .d8888b. .d8888b. d8888P    88aaaaa88a .d8888b. 
  88        88       88.  .88 88 88.  ... 88.  ...   88      88     88  88.  ... 88.  .88 88    88 88.  .88 88.  ...       88   88   88.  .88       88 
  dP        dP       `88888P' 88 `88888P' `88888P'   dP      dP     dP  `88888P' 88Y888P' dP    dP `88888P8 `88888P' `88888P'   dP   `88888P' `88888P' 
                              88                                                 88                                                                    
-                             dP                                                 dP                                                                    """)
+                             dP                                                 dP                                                                    [/]""")
 
 box = assets.bootup()
 assets.bootup_case(box)
@@ -76,57 +75,121 @@ while reply != "0":
                 assets.startapp(program, 0.1)
 
 #Help
-    elif reply.startswith("/help"):
+    elif reply == "/help":
         rich.print("""
 [#007fff]Help Menu:
 Features:
-Type in any program to open it <(program name) (virtual desktop)>
+Type in any program to open it <program name> [#ffffff]\[virtual desktop][/#ffffff]
 Type urls to web search <example.(com/net/us)>
 
 Commands:
-'/boot' to enter bootup modes
-'/dsearch' to enter desktop search
-'/hex' to get random hex color
-'/music' to play music
-'/new' to create a new file
-'/presence' to activate discord presence
-'/reload' to reload project hephaestus
-'/shutdown' to shutdown
-'/sleep' to sleep
-'/xy' to get current xy coordinates of mouse
-'/xycoords' to get continuous xy coordinates of mouse
+'/boot' - enters bootup sequence
+'/directory [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<directory>[/#ffffff] in specified location
+'/file [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<file>[/#ffffff] in specified location
+'/hex' - returns a random hex code with preview
+'/music' - plays a song
+'/new [#ffffff]<file name>[/#ffffff]' - creates a new file with the name [#ffffff]<file name>[/#ffffff]
+'/path [#ffffff]<file path>[/#ffffff]' - opens [#ffffff]<file path>[/#ffffff]
+'/presence' - updates discord rich presence
+'/private [#ffffff]<query>[/#ffffff]' - private searches [#ffffff]<query>[/#ffffff] on firefox
+'/reload' - reloads Project Hephaestus
+'/search [#ffffff]<query>[/#ffffff]' - searches [#ffffff]<query>[/#ffffff] on firefox
+'/shutdown [#ffffff]\[time delay][/#ffffff]' - shuts down or sleeps with [#ffffff]\[time delay][/#ffffff]
+'/test' - enters test phase
+'/xy' - returns current xy coordinates of mouse cursor
+'/xycoords' - returns continuous xy coordinates of mouse cursor
 
 Keybinds:
 Press esc thrice to enter new virtual desktop
 Press shift thrice to pin/unpin current window
-Press ctrl thrice to activate web search[/]
+Press ctrl thrice to activate web search[/#007fff]
+
+
+
+[#ffffff]<> Required[/]
+[#ffffff]\[] Optional[/]
 """)
 
-#Website
-    elif assets.domain_check(reply):
-        os.startfile(assets.file_dict["web_search"])
-        time.sleep(2)
-        pagui.write(reply, interval=0.001)
-        pagui.press("enter")
 
 #Bootup
-    elif reply.startswith("/boot"):
+    elif reply == "/boot":
         box = assets.bootup()
         assets.bootup_case(box)
 
 #Desktop Search
-    elif reply.startswith("/dsearch"):
-        os.startfile(assets.file_dict["desktop_search"])
+    elif reply.startswith("/file"):
+        query = reply[6:]
+        box = pagui.confirm(text="Select where you'd like to search",
+                            title="Search Location",
+                            buttons=["Desktop", "Downloads", "Documents", "Music"])
+        for name in glob.glob(rf"C:\Users\{user}\{box}\**\*", recursive = True):
+            fd = name.split("\\")[-1]
+            if query in fd.lower() and os.path.isfile(name):
+                rich.print(f"[#b6bf00]{name}[/]")
+                time.sleep(2)
+                os.startfile(name)
+                break
+
+    elif reply.startswith("/directory"):
+        query = reply[11:]
+        box = pagui.confirm(text="Select where you'd like to search",
+                            title="Search Location",
+                            buttons=["Desktop", "Downloads", "Documents", "Music"])
+        for name in glob.glob(rf"C:\Users\{user}\{box}\**\*", recursive = True):
+            fd = name.split("\\")[-1]
+            if query in fd.lower() and os.path.isdir(name):
+                rich.print(f"[#b6bf00]{name}[/]")
+                time.sleep(2)
+                os.startfile(name)
+                break
+
+#Web Search
+    elif reply.startswith("/search"):
+        query = reply[8:]
+        os.startfile(assets.file_dict["dev"])
+        time.sleep(2)
+        pagui.hotkey("win", "up")
+
+        pagui.hotkey("ctrl", "l")
+        pagui.write(query, interval=0.001)
+        pagui.press("enter")
+        
+    elif reply.startswith("/private"):
+        query = reply[9:]
+        os.startfile(assets.file_dict["dev"])
+        time.sleep(2)
+        pagui.hotkey("win", "up")
+
+        pagui.hotkey("ctrl", "shift", "p")
+
+        pagui.hotkey("ctrl", "l")
+        pagui.write(query, interval=0.001)
+        pagui.press("enter")
+
+        time.sleep(1)
+
+        pagui.hotkey("alt", "tab")
+        pagui.hotkey("ctrl", "w")
+        
+#Website
+    elif assets.domain_check(reply):
+        os.startfile(assets.file_dict["dev"])
+        time.sleep(2)
+        pagui.hotkey("win", "up")
+
+        pagui.hotkey("ctrl", "l")
+        pagui.write(reply, interval=0.001)
+        pagui.press("enter")
 
 #Hex color
-    elif reply.startswith("/hex"):
+    elif reply == "/hex":
         rndm_hex = str(random.randrange(0, 16777215))[2:]
         if len(rndm_hex) != 6:
             rndm_hex = str(rndm_hex) + "0"* (6 - len(rndm_hex))
-        rich.print(f"[#{rndm_hex}]#{rndm_hex}[/]")
+        rich.print(f"#{rndm_hex} [#{rndm_hex}]██████[/]")
 
 #Music
-    elif reply.startswith("/music"):
+    elif reply == "/music":
         assets.startapp("Groove", 3)
         pagui.click(397, 165)
         pagui.click(935, 549)
@@ -135,22 +198,22 @@ Press ctrl thrice to activate web search[/]
     elif reply.startswith("/new"):
         file_name = reply[5:]
         open(rf"C:\Users\{user}\Downloads\{file_name}", "x")
+        rich.print("[#00b855]File Created[/]")
         os.startfile(rf"C:\Users\{user}\Downloads\{file_name}")
 
+#Path
+    elif reply.startswith("/new"):
+        file_name = reply[5:]
+        os.startfile(file_name)
 
 #Presence
-    elif reply.startswith("/presence"):
+    elif reply == "/presence":
         choice = assets.choose_presence()
         assets.presence(choice)
 
 #Reload
-    elif reply.startswith("/reload"):
+    elif reply == "/reload":
         os.startfile(assets.file_dict["startup"])
-        time.sleep(1)
-        pagui.press("enter")
-        time.sleep(1)
-        pagui.press("left")
-        pagui.press("enter")
         time.sleep(1)
         pagui.hotkey("alt", "tab")
         pagui.hotkey("alt", "f4")
@@ -161,31 +224,37 @@ Press ctrl thrice to activate web search[/]
             waittime = int(reply[10:])
         except ValueError:
             pass
-        box = pagui.confirm(text="Select shutdown mode", title="Shutdown Mode", buttons=["Shutdown", "Sleep"])
+        box = pagui.confirm(text="Select shutdown mode",
+                            title="Shutdown Mode",
+                            buttons=["Shutdown", "Sleep"])
         if box == "Shutdown":
             shutdown = console.input("[#007fff]Do you wish to shutdown your computer ? (y/n): [/]")
             if shutdown == "n":
                 rich.print("[#c50f1f]Shutdown sequence cancelled[/]")
             else:
-                rich.print(f"[#c50f1f]Shutting down in {waittime} seconds...[/]")
+                rich.print(f"[#c50f1f]Shutting down ...[/]")
                 time.sleep(waittime)
-                print("[#00ff00]Shutting down now...[/]")
+                rich.print("[#00b855]Shutting down now...[/]")
                 time.sleep(2)
                 os.system("shutdown /s /t 5")
         else:
-            print("Entered sleep mode")
-            time.sleep(waittime)
+            rich.print("[#c50f1f]Entered sleep mode[/]")
+            try:
+                time.sleep(waittime)
+            except ValueError:
+                pass
+            rich.print("[#00b855]Sleeping now...[/]")
             os.startfile(assets.file_dict["sleep"])
 
 #Test space
-    elif reply.startswith("/test"):
+    elif reply == "/test":
         os.startfile(assets.file_dict["test"])
 
 #Current coords
-    elif reply.startswith("/xy"):
+    elif reply == "/xy":
         x, y = pagui.position()
-        print(f"X:{str(x).rjust(4)} Y:{str(y).rjust(4)}")
+        rich.print(f"[#c50f1f]X:{str(x).rjust(4)}[/] [#00b855]Y:{str(y).rjust(4)}[/]")
 
 #Mouse Pointer
-    elif reply.startswith("/xycoords"):
+    elif reply == "/xycoords":
         os.startfile(assets.file_dict["mouse"])
