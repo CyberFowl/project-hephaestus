@@ -17,7 +17,6 @@ file_dict = {
     "cam": rf"C:\Program Files\TechSmith\Camtasia 2019\CamtasiaStudio.exe",
     "canary": rf"C:\Users\{user}\Desktop\Desktop\Discord Canary.lnk",
     "chrome": rf"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
-    "desktop_search": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\desktop_search.py",
     "discord": rf"C:\Users\{user}\Desktop\Desktop\Discord.lnk",
     "firefox": rf"C:\Users\{user}\AppData\Local\Mozilla Firefox\firefox.exe",
     "dev": rf"C:\Program Files\Firefox Developer Edition\firefox.exe",
@@ -31,7 +30,6 @@ file_dict = {
     "startup": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\startup.py",
     "test": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\test_phase.py",
     "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
-    "web_search": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\web_search.py",
     "zoom": rf"C:\Users\{user}\AppData\Roaming\Zoom\bin\Zoom.exe"
 }
 
@@ -39,8 +37,10 @@ def bootup():
     """
     Opens a dialog box asking for bootup sequence
     """
-    print("Booting up")
-    result = pagui.confirm(text="Please select bootup mode", title="Bootup Mode", buttons=["Default", "Python", "Class", "Cancel"])
+    rich.print("[#00b855]Booting up[/]")
+    result = pagui.confirm( text="Please select bootup mode",
+                            title="Bootup Mode",
+                            buttons=["Default", "Python", "Class", "Cancel"])
     return result
     
 def bootup_case(box):
@@ -67,7 +67,7 @@ def bootup_case(box):
         pagui.click(182, 218) #Click first chat
         pagui.click(1741, 1047) #Click chat box
 
-        print("Booted up!")
+        rich.print("[#007fff]Booted up![/]")
 
     #CLASS
     elif box == "Class":
@@ -77,7 +77,7 @@ def bootup_case(box):
         pagui.click(182, 218) #Click first chat
         pagui.click(1741, 1047) #Click chat box
 
-        print("Booted up!")
+        rich.print("[#007fff]Booted up![/]")
 
     #PYTHON
     elif box == "Python":
@@ -86,11 +86,11 @@ def bootup_case(box):
         startapp("Firefox Developer Edition", 8) #Firefox Developer Edition
         pagui.hotkey("alt", "tab")
 
-        print("Booted up!") 
+        rich.print("[#007fff]Booted up![/]") 
 
     #CANCEL
     elif box == "Cancel":
-        print("Bootup canceled")
+        rich.print("[#c50f1f]Bootup canceled[/]")
 
 def domain_check(reply):
     """
@@ -120,7 +120,9 @@ def keybind():
         if key == pynput.keyboard.Key.ctrl_l:
             ctrl_l_count += 1
             if ctrl_l_count == 3:
-                os.startfile(rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\web_search.py")
+                win32gui.SetForegroundWindow(window_handle)
+                pyvda.AppView.current().pin()
+                pagui.write("/search ")
         else:
             ctrl_l_count = 0
         #Escape
@@ -141,14 +143,14 @@ def keybind():
                     pyvda.AppView.current().pin()
         else:
             shift_l_count = 0
-        # #Open file/app
-        # if key == pynput.keyboard.Key.alt_l:
-        #     alt_l_count += 1
-        #     if alt_l_count == 3:
-        #         win32gui.SetForegroundWindow(window_handle)
-        #         pyvda.AppView.current().pin()
-        # else:
-        #     alt_l_count = 0
+        #Open file/app
+        if key == pynput.keyboard.Key.alt_l:
+            alt_l_count += 1
+            if alt_l_count == 3:
+                win32gui.SetForegroundWindow(window_handle)
+                pyvda.AppView.current().pin()
+        else:
+            alt_l_count = 0
     listener = pynput.keyboard.Listener(on_release=on_release)
     listener.start()
 
@@ -156,7 +158,9 @@ def choose_presence():
     """
     Displays rich presence for discord
     """
-    result = pagui.confirm(text="Please select bootup mode", title="Bootup Mode", buttons=["Python", "Work", "Cancel"])
+    result = pagui.confirm( text="Please select bootup mode",
+                            title="Bootup Mode",
+                            buttons=["Python", "Work", "Cancel"])
     return result
 
 def presence(choice):
@@ -167,7 +171,7 @@ def presence(choice):
     if choice == "Python":
         presence = pypresence.Presence("848214359822041218")
         presence.connect()
-        print("Connected")
+        rich.print("[#00b855]Connected[/]")
         presence.update(
         details="on vs code",
         large_image="python",
@@ -185,7 +189,7 @@ def presence(choice):
     elif choice == "Work":
         presence = pypresence.Presence("946448728884138014")
         presence.connect()
-        print("Connected")
+        rich.print("[#00b855]Connected[/]")
         work = input("Working on: ")
         presence.update(
         details=f"on {work}",
@@ -194,7 +198,7 @@ def presence(choice):
         large_text="DND"
         )
 
-    print("Updated")
+    rich.print("[#007fff]Updated[/]")
 
 def startapp(app_to_start, time_sleep):
     """
