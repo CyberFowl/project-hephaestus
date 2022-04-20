@@ -3,10 +3,12 @@ import rich
 import time
 import pyvda
 import pynput
+import pystray
 import keyboard
 import win32gui
 import pypresence
 import pyautogui as pagui
+from PIL import Image
 
 user = os.getenv("username")
 window_handle = win32gui.GetForegroundWindow()
@@ -31,6 +33,10 @@ file_dict = {
     "test": rf"C:\Users\{user}\Desktop\Desktop\project-hephaestus\test_phase.py",
     "vsc": rf"C:\Program Files\Microsoft VS Code\Code.exe",
     "zoom": rf"C:\Users\{user}\AppData\Roaming\Zoom\bin\Zoom.exe"
+}
+
+ref_sheet = {
+    "pystray": "https://pystray.readthedocs.io/en/latest/"
 }
 
 def bootup():
@@ -96,7 +102,7 @@ def domain_check(reply):
     """
     Checks text for top-level domains
     """
-    domains = [".app", ".biz", ".blog", ".com", ".dev", ".gle", ".in", ".inc", ".io", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", ".uk", ".us", ".wiki", ".xyz"]
+    domains = ["http", ".app", ".biz", ".blog", ".com", ".dev", ".gle", ".in", ".inc", ".io", ".lol", ".ltd", ".net", ".org", ".online", ".study", ".tech", ".uk", ".us", ".wiki", ".xyz"]
     for domain in domains:
         if domain in reply:
             state = True
@@ -110,18 +116,39 @@ def keybind():
     """
     Waits for key combinations to run code
     """
+
+    global key_log
+
+    key_log = []
+
     ctrl_l_count = 0
     esc_count = 0
     shift_l_count = 0
     alt_l_count = 0
+
     def on_release(key):
-        #Web Search
+        key_log.append(str(key))
+        if len(key_log) > 6:
+            del key_log[0]
+        if key_log == ["'y'", "'t'", "'p'", "'l'", "'s'", 'Key.enter']:
+            os.startfile(file_dict["dev"])
+            time.sleep(2)
+            pagui.hotkey("win", "up")
+
+            pagui.hotkey("ctrl", "l")
+            pagui.write("youtube.com/", interval=0.001)
+            pagui.press("enter")
+
         global ctrl_l_count, esc_count, shift_l_count, alt_l_count
+        #Web Search
         if key == pynput.keyboard.Key.ctrl_l:
             ctrl_l_count += 1
             if ctrl_l_count == 3:
-                win32gui.SetForegroundWindow(window_handle)
-                pyvda.AppView.current().pin()
+                try:
+                    win32gui.SetForegroundWindow(window_handle)
+                except:
+                    pagui.hotkey("alt", "tab")
+                    win32gui.SetForegroundWindow(window_handle)
                 pagui.write("/search ")
         else:
             ctrl_l_count = 0
@@ -147,8 +174,11 @@ def keybind():
         if key == pynput.keyboard.Key.alt_l:
             alt_l_count += 1
             if alt_l_count == 3:
-                win32gui.SetForegroundWindow(window_handle)
-                pyvda.AppView.current().pin()
+                try:
+                    win32gui.SetForegroundWindow(window_handle)
+                except:
+                    pagui.hotkey("alt", "tab")
+                    win32gui.SetForegroundWindow(window_handle)
         else:
             alt_l_count = 0
     listener = pynput.keyboard.Listener(on_release=on_release)
@@ -211,6 +241,29 @@ def startapp(app_to_start, time_sleep):
     time.sleep(1)
     pagui.hotkey("win", "up")
     time.sleep(time_sleep)
+
+def tray():
+    """
+    Runs system tray icon
+    """
+    global icon
+    image = Image.open(rf"C:\Users\{user}\Downloads\code.png")
+
+    def source(icon, item):
+        os.system("code .")
+
+    def github(icon, item):
+        os.startfile(file_dict["dev"])
+        time.sleep(2)
+        pagui.hotkey("win", "up")
+        pagui.hotkey("ctrl", "l")
+        pagui.write("https://github.com/CyberFowl/project-hephaestus", interval=0.001)
+        pagui.press("enter")
+
+    iconMenu = pystray.Menu(pystray.MenuItem("Source code", source),
+                            pystray.MenuItem("GitHub", github))
+    icon = pystray.Icon("VSC", icon=image, title="Project Hephaestus", menu=iconMenu)
+    icon.run_detached()
 
 def startup():
     """
