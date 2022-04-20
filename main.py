@@ -1,10 +1,10 @@
 import os
 import glob
+import rich
 import time
 import pyvda
 import assets
 import random
-import rich
 import pyautogui as pagui
 
 assets.startup()
@@ -22,6 +22,7 @@ a88aaaa8P' 88d888b. .d8888b. dP .d8888b. .d8888b. d8888P    88aaaaa88a .d8888b. 
 box = assets.bootup()
 assets.bootup_case(box)
 assets.keybind()
+assets.tray()
 
 rich.print("[#007fff]\n'/help' to access help menu[/]", end="\n\n")
 
@@ -29,7 +30,9 @@ console = rich.console.Console()
 user = os.getenv("username")
 reply = ""
 while reply != "0":
-    reply = input().lower()
+    reply = input()
+    plain_reply = reply
+    reply = reply.lower()
     if not reply.startswith("/") and not assets.domain_check(reply) and not reply == "0":
         #Removing Extra Spaces
         while reply[-1] == " ":
@@ -52,17 +55,20 @@ while reply != "0":
                     assets.startapp(program, 0.1)
             #Virtual Desktop unavailable
             else:
-                for i in range(0, int(virtual_desk) - len(pyvda.get_virtual_desktops())):
-                    pagui.hotkey("ctrl", "win", "d")
-                pyvda.VirtualDesktop(int(virtual_desk)).go()
-                time.sleep(3)
-                #Check logged Files
-                program = " ".join(program)
-                if str(program) in assets.file_dict:
-                    os.startfile(assets.file_dict[program])
-                #Not in Logged Files
+                if int(virtual_desk) < 10:
+                    for i in range(0, int(virtual_desk) - len(pyvda.get_virtual_desktops())):
+                        pagui.hotkey("ctrl", "win", "d")
+                    pyvda.VirtualDesktop(int(virtual_desk)).go()
+                    time.sleep(3)
+                    #Check logged Files
+                    program = " ".join(program)
+                    if str(program) in assets.file_dict:
+                        os.startfile(assets.file_dict[program])
+                    #Not in Logged Files
+                    else:
+                        assets.startapp(program, 0.1)
                 else:
-                    assets.startapp(program, 0.1)
+                    rich.print("[#c50f1f]Wayyy too many virtual desktops[/]")
 
         #No Virtual Desktop Specified
         except ValueError:
@@ -79,22 +85,26 @@ while reply != "0":
         rich.print("""
 [#007fff]Help Menu:
 Features:
-Type in any program to open it <program name> [#ffffff]\[virtual desktop][/#ffffff]
-Type urls to web search <example.(com/net/us)>
+Type in any program to open it [#ffffff]<program name> \[virtual desktop][/#ffffff]
+Type urls to web search [#ffffff]<example.(com/net/us)>[/#ffffff]
 
 Commands:
 '/boot' - enters bootup sequence
+'/del [#ffffff]<file name>[/#ffffff]' - deletes [#ffffff]<file name>[/#ffffff] from downloads
 '/directory [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<directory>[/#ffffff] in specified location
 '/file [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<file>[/#ffffff] in specified location
-'/hex' - returns a random hex code with preview
+'/hex [#ffffff]\[hex code][/#ffffff]' - returns [#ffffff]\[hex code][/#ffffff] preview if specified, else a random hex code with preview
 '/music' - plays a song
-'/new [#ffffff]<file name>[/#ffffff]' - creates a new file with the name [#ffffff]<file name>[/#ffffff]
+'/new [#ffffff]<file name>[/#ffffff]' - creates a new file with the name [#ffffff]<file name>[/#ffffff] in downloads
+'/open [#ffffff]<file name>[/#ffffff]' - opens [#ffffff]<file name>[/#ffffff] from downloads
 '/path [#ffffff]<file path>[/#ffffff]' - opens [#ffffff]<file path>[/#ffffff]
 '/presence' - updates discord rich presence
-'/private [#ffffff]<query>[/#ffffff]' - private searches [#ffffff]<query>[/#ffffff] on firefox
+'[#5c0dde]/private[/#5c0dde] [#ffffff]<query>[/#ffffff]' - [#5c0dde]private[/#5c0dde] searches [#ffffff]<query>[/#ffffff] on firefox
 '/reload' - reloads Project Hephaestus
+'/ref [#ffffff]<doc>[/#ffffff]' - searches for [#ffffff]<doc>[/#ffffff] references
 '/search [#ffffff]<query>[/#ffffff]' - searches [#ffffff]<query>[/#ffffff] on firefox
 '/shutdown [#ffffff]\[time delay][/#ffffff]' - shuts down or sleeps with [#ffffff]\[time delay][/#ffffff]
+'/system [#ffffff]<call>[/#ffffff]' - runs [#ffffff]<call>[/#ffffff] as system call
 '/test' - enters test phase
 '/xy' - returns current xy coordinates of mouse cursor
 '/xycoords' - returns continuous xy coordinates of mouse cursor
@@ -181,12 +191,26 @@ Press ctrl thrice to activate web search[/#007fff]
         pagui.write(reply, interval=0.001)
         pagui.press("enter")
 
+#References
+    elif reply.startswith("/ref"):
+        ref = reply[5:]
+        if ref in assets.ref_sheet:
+            pagui.write(assets.ref_sheet[ref], interval=0.01)
+            time.sleep(1)
+            pagui.press("enter")
+        else:
+            rich.print("[#c50f1f]Not found[/]]")
+
 #Hex color
     elif reply == "/hex":
         rndm_hex = str(random.randrange(0, 16777215))[2:]
         if len(rndm_hex) != 6:
             rndm_hex = str(rndm_hex) + "0"* (6 - len(rndm_hex))
-        rich.print(f"#{rndm_hex} [#{rndm_hex}]██████[/]")
+        rich.print(f"[#{rndm_hex}]██████[/] [#cccccc]#{rndm_hex}[/]")
+
+    elif reply.startswith("/hex"):
+        color = reply[-6:]
+        rich.print(f"[#{color}]██████[/]")
 
 #Music
     elif reply == "/music":
@@ -201,10 +225,32 @@ Press ctrl thrice to activate web search[/#007fff]
         rich.print("[#00b855]File Created[/]")
         os.startfile(rf"C:\Users\{user}\Downloads\{file_name}")
 
+#Open file
+    elif reply.startswith("/open"):
+        file_name = rf"C:\Users\{user}\Downloads\{reply[6:]}"
+        if os.path.isfile(file_name):
+            os.startfile(file_name)
+        else:
+            rich.print("[#c50f1f]File Not Found[/]")
+
+#Delete file
+    elif reply.startswith("/del"):
+        file_name = rf"C:\Users\{user}\Downloads\{reply[5:]}"
+        if os.path.isfile(file_name):
+            os.remove(file_name)
+            rich.print("[#c50f1f]File Deleted[/]")
+        else:
+            rich.print("[#c50f1f]File Not Found[/]")
+
 #Path
-    elif reply.startswith("/new"):
-        file_name = reply[5:]
+    elif plain_reply.startswith("/path"):
+        file_name = reply[6:]
         os.startfile(file_name)
+
+#System calls
+    elif reply.startswith("/system"):
+        call = reply[8:]
+        os.system(call)
 
 #Presence
     elif reply == "/presence":
@@ -218,33 +264,37 @@ Press ctrl thrice to activate web search[/#007fff]
         pagui.hotkey("alt", "tab")
         pagui.hotkey("alt", "f4")
 
-#Shutdown/Sleep
+#Shutdown
+    elif reply == "/shutdown now":
+        os.system("shutdown /s /t 5")
+
     elif reply.startswith("/shutdown"):
         try:
             waittime = int(reply[10:])
         except ValueError:
-            pass
-        box = pagui.confirm(text="Select shutdown mode",
-                            title="Shutdown Mode",
-                            buttons=["Shutdown", "Sleep"])
-        if box == "Shutdown":
-            shutdown = console.input("[#007fff]Do you wish to shutdown your computer ? (y/n): [/]")
-            if shutdown == "n":
-                rich.print("[#c50f1f]Shutdown sequence cancelled[/]")
-            else:
-                rich.print(f"[#c50f1f]Shutting down ...[/]")
-                time.sleep(waittime)
-                rich.print("[#00b855]Shutting down now...[/]")
-                time.sleep(2)
-                os.system("shutdown /s /t 5")
+            waittime = 5
+
+        shutdown = console.input("[#007fff]Do you wish to shutdown your computer? (y/n): [/]")
+        if shutdown == "n":
+            rich.print("[#c50f1f]Shutdown sequence cancelled[/]")
         else:
-            rich.print("[#c50f1f]Entered sleep mode[/]")
-            try:
-                time.sleep(waittime)
-            except ValueError:
-                pass
-            rich.print("[#00b855]Sleeping now...[/]")
-            os.startfile(assets.file_dict["sleep"])
+            rich.print(f"[#c50f1f]Shutting down...[/]")
+            time.sleep(waittime)
+            rich.print("[#00b855]Shutting down now...[/]")
+            time.sleep(2)
+            os.system("shutdown /s /t 5")
+
+#Sleep
+    elif reply.startswith("/sleep"):
+        try:
+            waittime = int(reply[7:])
+        except ValueError:
+            waittime = 5
+        
+        rich.print("[#c50f1f]Entered sleep mode[/]")
+        time.sleep(waittime)
+        rich.print("[#00b855]Sleeping now...[/]")
+        os.startfile(assets.file_dict["sleep"])
 
 #Test space
     elif reply == "/test":
@@ -258,3 +308,10 @@ Press ctrl thrice to activate web search[/#007fff]
 #Mouse Pointer
     elif reply == "/xycoords":
         os.startfile(assets.file_dict["mouse"])
+
+    elif reply.startswith("/"):
+        cmd = reply[1:]
+        os.system(cmd)
+
+# rich.print(f"[#5c0dde]{assets.key_log}[/]")
+assets.icon.stop()
