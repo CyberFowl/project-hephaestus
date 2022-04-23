@@ -5,6 +5,8 @@ import time
 import pyvda
 import assets
 import random
+import getpass
+import smtplib
 import pyautogui as pagui
 
 assets.startup()
@@ -199,7 +201,35 @@ Press ctrl thrice to activate web search[/#007fff]
             time.sleep(1)
             pagui.press("enter")
         else:
-            rich.print("[#c50f1f]Not found[/]]")
+            rich.print("[#c50f1f]Not found[/]")
+
+#Gmail
+    elif reply == "/mail":
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        s.starttls()
+
+        rich.print(" [#007fff]Gmail ID: [/]")
+        login = input(" ")
+        rich.print(" [#007fff]Password: [/]", end="")
+        password = getpass.getpass(prompt=" ")
+        print_pass = ""
+        for c in password:
+            print_pass = print_pass + "*"
+        print(f" {print_pass}")
+        rich.print(" [#007fff]Addressee: [/]")
+        adressee = input(" ")
+
+        try:
+            s.login(login, password)
+            rich.print(" [#007fff]Message: [/]", end="")
+            message = input()
+            message = f"\r\n{message}\n\n\nSent with Project Hephaestus"
+            s.sendmail(login, adressee, message)
+            rich.print(f" [#00b855]Sent mail to {adressee}[/]")
+            s.quit()
+
+        except smtplib.SMTPAuthenticationError:
+            rich.print(" [#c50f1f]Failed to send email. Make sure Not Secure Access is enabled on your Google Account[/]")
 
 #Hex color
     elif reply == "/hex":
