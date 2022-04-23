@@ -96,6 +96,7 @@ Commands:
 '/directory [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<directory>[/#ffffff] in specified location
 '/file [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<file>[/#ffffff] in specified location
 '/hex [#ffffff]\[hex code][/#ffffff]' - returns [#ffffff]\[hex code][/#ffffff] preview if specified, else a random hex code with preview
+'/mail' - allows you to send an email
 '/music' - plays a song
 '/new [#ffffff]<file name>[/#ffffff]' - creates a new file with the name [#ffffff]<file name>[/#ffffff] in downloads
 '/open [#ffffff]<file name>[/#ffffff]' - opens [#ffffff]<file name>[/#ffffff] from downloads
@@ -112,6 +113,7 @@ Commands:
 '/xycoords' - returns continuous xy coordinates of mouse cursor
 
 Keybinds:
+Press print screen to save screenshot in downloads
 Press esc thrice to enter new virtual desktop
 Press shift thrice to pin/unpin current window
 Press ctrl thrice to activate web search[/#007fff]
