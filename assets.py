@@ -4,6 +4,7 @@ import time
 import pyvda
 import pynput
 import pystray
+import datetime
 import keyboard
 import win32gui
 import pypresence
@@ -152,6 +153,16 @@ def keybind():
                 pagui.write("/search ")
         else:
             ctrl_l_count = 0
+        #Screenshot
+        if key == pynput.keyboard.Key.print_screen:
+            screenshot = pagui.screenshot()
+
+            today = datetime.date.today()
+            date = today.strftime("[%b-%d-%Y]")
+            now = datetime.datetime.now()
+            current_time = now.strftime("[%H-%M-%S]")
+
+            screenshot.save(rf"C:/Users/{user}/Downloads/heph ss {current_time} {date}.png")
         #Escape
         if key == pynput.keyboard.Key.esc:
             esc_count += 1
