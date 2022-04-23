@@ -221,9 +221,11 @@ Press ctrl thrice to activate web search[/#007fff]
 
         try:
             s.login(login, password)
-            rich.print(" [#007fff]Message: [/]", end="")
-            message = input()
-            message = f"\r\n{message}\n\n\nSent with Project Hephaestus"
+            rich.print(" [#007fff]Subject: [/]")
+            subject = input(" ")
+            rich.print(" [#007fff]Content: [/]")
+            content = input(" ")
+            message = f"Subject: {subject}\n\n{content}\n\n\nSent with Project Hephaestus"
             s.sendmail(login, adressee, message)
             rich.print(f" [#00b855]Sent mail to {adressee}[/]")
             s.quit()
