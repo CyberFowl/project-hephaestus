@@ -4,9 +4,11 @@ import rich
 import time
 import pyvda
 import assets
+import base64
 import random
 import getpass
 import smtplib
+import pyperclip
 import pyautogui as pagui
 
 assets.startup()
@@ -92,8 +94,10 @@ Type urls to web search [#ffffff]<example.(com/net/us)>[/#ffffff]
 
 Commands:
 '/boot' - enters bootup sequence
+'/decode [#ffffff]<base16>[/#ffffff]' - decodes [#ffffff]<base16>[/#ffffff] to normal text
 '/del [#ffffff]<file name>[/#ffffff]' - deletes [#ffffff]<file name>[/#ffffff] from downloads
 '/directory [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<directory>[/#ffffff] in specified location
+'/encode [#ffffff]<text>[/#ffffff]' - encodes [#ffffff]<text>[/#ffffff] in base 16
 '/file [#ffffff]<query>[/#ffffff]' - searches for [#ffffff]<file>[/#ffffff] in specified location
 '/hex [#ffffff]\[hex code][/#ffffff]' - returns [#ffffff]\[hex code][/#ffffff] preview if specified, else a random hex code with preview
 '/mail' - allows you to send an email
@@ -245,6 +249,23 @@ Press ctrl thrice to activate web search[/#007fff]
     elif reply.startswith("/hex"):
         color = reply[-6:]
         rich.print(f"[#{color}]██████[/]")
+
+#Encoder/Decoder
+    elif reply.startswith("/encode"):
+        text = reply[8:]
+        encoded = text.encode("UTF-8")
+        encoded = base64.b16encode(encoded)
+        encoded = encoded.decode("UTF-8")
+
+        pyperclip.copy(encoded)
+
+    elif reply.startswith("/decode"):
+        text = reply[8:]
+        decoded = text.encode("UTF-8")
+        decoded = base64.b16decode(decoded)
+        decoded = decoded.decode("UTF-8")
+
+        pyperclip.copy(decoded)
 
 #Music
     elif reply == "/music":
