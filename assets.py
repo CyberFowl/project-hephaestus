@@ -2,7 +2,9 @@ import os
 import rich
 import time
 import pyvda
+import ctypes
 import pynput
+import random
 import pystray
 import datetime
 import keyboard
@@ -37,7 +39,11 @@ file_dict = {
 }
 
 ref_sheet = {
-    "pystray": "https://pystray.readthedocs.io/en/latest/"
+    "pystray": "https://pystray.readthedocs.io/en/latest/",
+    "pyvda": "https://github.com/mrob95/pyvda",
+    "smtp": "https://docs.python.org/3/library/smtplib.html",
+    "imap": "https://docs.python.org/3/library/imaplib.html",
+    "ascii": "https://ascii-generator.site/"
 }
 
 def bootup():
@@ -122,39 +128,24 @@ def keybind():
 
     key_log = []
 
-    ctrl_l_count = 0
-    esc_count = 0
-    shift_l_count = 0
-    alt_l_count = 0
-
     def on_release(key):
+
+        global key_log
+
         key_log.append(str(key))
-        if len(key_log) > 6:
+        if len(key_log) > 3:
             del key_log[0]
-        if key_log == ["'y'", "'t'", "'p'", "'l'", "'s'", 'Key.enter']:
-            os.startfile(file_dict["dev"])
-            time.sleep(2)
-            pagui.hotkey("win", "up")
 
-            pagui.hotkey("ctrl", "l")
-            pagui.write("youtube.com/", interval=0.001)
-            pagui.press("enter")
-
-        global ctrl_l_count, esc_count, shift_l_count, alt_l_count
         #Web Search
-        if key == pynput.keyboard.Key.ctrl_l:
-            ctrl_l_count += 1
-            if ctrl_l_count == 3:
-                try:
-                    win32gui.SetForegroundWindow(window_handle)
-                except:
-                    pagui.hotkey("alt", "tab")
-                    win32gui.SetForegroundWindow(window_handle)
-                pagui.write("/search ")
-        else:
-            ctrl_l_count = 0
+        if key_log == ['Key.ctrl_l', 'Key.ctrl_l', 'Key.ctrl_l']:
+            try:
+                win32gui.SetForegroundWindow(window_handle)
+            except:
+                pagui.hotkey("alt", "tab")
+                win32gui.SetForegroundWindow(window_handle)
+            pagui.write("/search ")
         #Screenshot
-        if key == pynput.keyboard.Key.print_screen:
+        if key_log[-1] == 'Key.print_screen':
             screenshot = pagui.screenshot()
 
             today = datetime.date.today()
@@ -163,35 +154,33 @@ def keybind():
             current_time = now.strftime("[%H-%M-%S]")
 
             screenshot.save(rf"C:/Users/{user}/Downloads/heph ss {current_time} {date}.png")
-        #Escape
-        if key == pynput.keyboard.Key.esc:
-            esc_count += 1
-            if esc_count == 3:
-                pyvda.AppView.current().unpin()
-                pagui.hotkey("ctrl","win","d")
-        else:
-            esc_count = 0
+        #Wallpaper
+        if key_log == ['Key.esc', 'Key.esc', 'Key.esc']:
+            wallpapers = os.listdir(r"C:\Users\msher\Downloads\decepticon-wallpapers")
+            choice = random.randint(0, len(wallpapers)-1)
+            wallpaper = wallpapers[choice]
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, rf"C:\Users\msher\Downloads\decepticon-wallpapers\{wallpaper}", 0)
+            
+        if key_log == ['Key.ctrl_r', 'Key.ctrl_r', 'Key.ctrl_r']:
+            wallpapers = os.listdir(r"C:\Users\msher\Desktop\Desktop\CyberFowl\Current-Project-Psd\bruh\images")
+            choice = random.randint(0, len(wallpapers)-1)
+            wallpaper = wallpapers[choice]
+            ctypes.windll.user32.SystemParametersInfoW(20, 0, rf"C:\Users\msher\Desktop\Desktop\CyberFowl\Current-Project-Psd\bruh\images\{wallpaper}", 0)
         #Pin/Unpin
-        if key == pynput.keyboard.Key.shift_l:
-            shift_l_count += 1
-            if shift_l_count == 3:
-                if pyvda.AppView.current().is_pinned():
-                    pyvda.AppView.current().unpin()
-                else:
+        if key_log == ['Key.shift', 'Key.shift', 'Key.shift']:
+            if pyvda.AppView.current().is_pinned():
+                pyvda.AppView.current().unpin()
+            else:
                     pyvda.AppView.current().pin()
-        else:
-            shift_l_count = 0
+            key_log = []
         #Open file/app
-        if key == pynput.keyboard.Key.alt_l:
-            alt_l_count += 1
-            if alt_l_count == 3:
-                try:
-                    win32gui.SetForegroundWindow(window_handle)
-                except:
-                    pagui.hotkey("alt", "tab")
-                    win32gui.SetForegroundWindow(window_handle)
-        else:
-            alt_l_count = 0
+        if key_log == ['Key.alt_l', 'Key.alt_l', 'Key.alt_l']:
+            try:
+                win32gui.SetForegroundWindow(window_handle)
+            except:
+                pagui.hotkey("alt", "tab")
+                win32gui.SetForegroundWindow(window_handle)
+            key_log = []
     listener = pynput.keyboard.Listener(on_release=on_release)
     listener.start()
 
